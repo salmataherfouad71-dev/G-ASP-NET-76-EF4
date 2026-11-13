@@ -21,6 +21,11 @@ namespace Assignment._19.Configurations
                    .HasColumnType("varchar(150)");
             builder.Property(m => m.HireDate)
                    .HasDefaultValueSql("GETDATE()");
+            builder.HasData(new Manager[] 
+            { 
+                new Manager{ Id=1,FullName="Ahmad Mostafa",Email="Ahmad99@gmail.com",PhoneNumber="+201076900876"},
+                new Manager{ Id=2,FullName="Omar Waleed",Email="Omar02@gmail.com",PhoneNumber="+201186401832"}
+            });
         }
     }
 }

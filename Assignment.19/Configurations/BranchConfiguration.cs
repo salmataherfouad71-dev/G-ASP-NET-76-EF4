@@ -20,6 +20,11 @@ namespace Assignment._19.Configurations
                    .HasColumnType("varchar(50)");
             builder.Property(b => b.Address)
                    .HasColumnType("varchar(200)");
+            builder.HasData(new Branch[]
+            { 
+                new Branch{Code="CAI-01",Name="Cairo Main Branch",PhoneNumber="+201173801193",Address="Nasr City",ManagerId=1 },
+                new Branch{Code="CAI-02",Name="Alexandria Branch",PhoneNumber="+201029120765",Address="Burj Al Arab",ManagerId=2 }
+            });
         }
     }
 }

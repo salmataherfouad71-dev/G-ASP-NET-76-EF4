@@ -82,6 +82,24 @@ namespace Assignment._19.Migrations
                         .IsUnique();
 
                     b.ToTable("Branches");
+
+                    b.HasData(
+                        new
+                        {
+                            Code = "CAI-01",
+                            Address = "Nasr City",
+                            ManagerId = 1,
+                            Name = "Cairo Main Branch",
+                            PhoneNumber = "+201173801193"
+                        },
+                        new
+                        {
+                            Code = "CAI-02",
+                            Address = "Burj Al Arab",
+                            ManagerId = 2,
+                            Name = "Alexandria Branch",
+                            PhoneNumber = "+201029120765"
+                        });
                 });
 
             modelBuilder.Entity("Assignment._19.Models.Customer", b =>
@@ -180,6 +198,24 @@ namespace Assignment._19.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Managers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "Ahmad99@gmail.com",
+                            FullName = "Ahmad Mostafa",
+                            HireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PhoneNumber = "+201076900876"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Email = "Omar02@gmail.com",
+                            FullName = "Omar Waleed",
+                            HireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PhoneNumber = "+201186401832"
+                        });
                 });
 
             modelBuilder.Entity("Assignment._19.Models.Transaction", b =>
