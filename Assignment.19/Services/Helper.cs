@@ -22,13 +22,13 @@ namespace Assignment._19.Services
             } while (string.IsNullOrWhiteSpace(result));
             return result;
         }
-        public static int GetInt(string message,int min,int max)
+        public static int GetInt(string message, int min, int max)
         {
             int result;
             do
             {
                 Console.Write(message);
-            } while (!int.TryParse(Console.ReadLine(),out result)&&result<=min&&result>=max);
+            } while (!int.TryParse(Console.ReadLine(), out result) && result <= min && result >= max);
             return result;
         }
         public static DateTime GetDate(string message)
@@ -37,7 +37,7 @@ namespace Assignment._19.Services
             do
             {
                 Console.Write(message);
-            } while (!DateTime.TryParseExact(Console.ReadLine(),"yyyy-MM-dd",CultureInfo.InvariantCulture,DateTimeStyles.None,out result));
+            } while (!DateTime.TryParseExact(Console.ReadLine(), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out result));
             return result;
         }
         public static void AddCustomer(AppDbContext context)
@@ -49,9 +49,9 @@ namespace Assignment._19.Services
             string email = GetString("Email           : ");
             string phone = GetString("Phone           : ");
             string address = GetString("Address         : ");
-            int choice = GetInt("Customer Type:\n\t1)Individual\n\t2)Business\nChoice:",1,2);
+            int choice = GetInt("Customer Type:\n\t1)Individual\n\t2)Business\nChoice:", 1, 2);
             CustomerType type = (choice == 1) ? CustomerType.Individual : CustomerType.Business;
-            var customer= new Customer
+            var customer = new Customer
             {
                 FullName = fullName,
                 NationalId = nationalId,
@@ -79,13 +79,13 @@ namespace Assignment._19.Services
             else
                 type = AccountType.Business;
             string branchCode = GetString("Branch Code     : ");
-            int customerId = GetInt("Customer ID     : ",0,int.MaxValue);
+            int customerId = GetInt("Customer ID     : ", 0, int.MaxValue);
             int choiceRole = GetInt("OwnerShip Role:\n\t1)Primary\n\t2)CoHolder\nChoice:", 1, 2);
             OwnerShipType role = (choiceRole == 1) ? OwnerShipType.Primary : OwnerShipType.CoHolder;
             Console.WriteLine($"Validating branch '{branchCode}' and customer #{customerId} ...");
             var branch = context.Branches.FirstOrDefault(b => b.Code == branchCode);
             var customer = context.Customers.FirstOrDefault(c => c.Id == customerId);
-            if (branch == null )
+            if (branch == null)
             {
                 Console.WriteLine("The branch is not found!");
                 return;
@@ -107,8 +107,8 @@ namespace Assignment._19.Services
             {
                 CustomerId = customerId,
                 AccountId = account.AccountNumber,
-                OwnerShipType =role,
-                AccountStatus=AccountStatus.Active
+                OwnerShipType = role,
+                AccountStatus = AccountStatus.Active
             };
             context.CustomerAccounts.Add(customerAccount);
             context.SaveChanges();
@@ -117,10 +117,10 @@ namespace Assignment._19.Services
         public static void UpdateStatus(AppDbContext context)
         {
             Console.WriteLine("--- Update Account Status ---");
-            int accountId = GetInt("Account Number  : ",1,int.MaxValue);
-            int customerId = GetInt("Customer ID     : ",1,int.MaxValue);
-            var customerAccount=context.CustomerAccounts
-            .FirstOrDefault(ca => ca.AccountId == accountId&&ca.CustomerId==customerId);
+            int accountId = GetInt("Account Number  : ", 1, int.MaxValue);
+            int customerId = GetInt("Customer ID     : ", 1, int.MaxValue);
+            var customerAccount = context.CustomerAccounts
+            .FirstOrDefault(ca => ca.AccountId == accountId && ca.CustomerId == customerId);
             if (customerAccount == null)
             {
                 Console.WriteLine("The customer account is not found!");
@@ -130,6 +130,23 @@ namespace Assignment._19.Services
             customerAccount.AccountStatus = (choice == 1) ? AccountStatus.Active : AccountStatus.Closed;
             context.SaveChanges();
             Console.WriteLine($"Status updated to {customerAccount.AccountStatus}.");
+        }
+        public static void RemoveAccount(AppDbContext context)
+        {
+            Console.WriteLine("--- Remove Account From Customer ---");
+            int accountId = GetInt("Account Number  : ", 1, int.MaxValue);
+            int customerId = GetInt("Customer ID     : ", 1, int.MaxValue);
+            var customerAccount = context.CustomerAccounts
+            .FirstOrDefault(ca => ca.AccountId == accountId && ca.CustomerId == customerId);
+            if (customerAccount == null)
+            {
+                Console.WriteLine("The customer account is not found!");
+                return;
+            }
+            context.Remove(customerAccount);
+            context.SaveChanges();
+            Console.WriteLine($"OwnerShip link deleted.");
+            Console.WriteLine($"\tThat was the last owner - account '{accountId}' was also removed.");
         }
     }
 }
