@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Assignment._19.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Assignment._19.Services
 {
@@ -112,6 +113,23 @@ namespace Assignment._19.Services
             context.CustomerAccounts.Add(customerAccount);
             context.SaveChanges();
             Console.WriteLine($"Account '{account.AccountNumber}' created and linked to customer {customerId} as {role} owner.");
+        }
+        public static void UpdateStatus(AppDbContext context)
+        {
+            Console.WriteLine("--- Update Account Status ---");
+            int accountId = GetInt("Account Number  : ",1,int.MaxValue);
+            int customerId = GetInt("Customer ID     : ",1,int.MaxValue);
+            var customerAccount=context.CustomerAccounts
+            .FirstOrDefault(ca => ca.AccountId == accountId&&ca.CustomerId==customerId);
+            if (customerAccount == null)
+            {
+                Console.WriteLine("The customer account is not found!");
+                return;
+            }
+            int choice = GetInt("New Status:\n\t1)Active\n\t2)Closed\nChoice:", 1, 2);
+            customerAccount.AccountStatus = (choice == 1) ? AccountStatus.Active : AccountStatus.Closed;
+            context.SaveChanges();
+            Console.WriteLine($"Status updated to {customerAccount.AccountStatus}.");
         }
     }
 }
