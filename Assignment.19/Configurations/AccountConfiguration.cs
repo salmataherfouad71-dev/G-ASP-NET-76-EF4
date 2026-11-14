@@ -14,6 +14,9 @@ namespace Assignment._19.Configurations
         public void Configure(EntityTypeBuilder<Account> builder)
         {
             builder.HasKey(a=>a.AccountNumber);
+            builder.HasOne(a => a.Branch)
+                   .WithMany(b => b.Accounts)
+                   .HasForeignKey(a => a.BranchId);
             builder.Property(a=>a.AccountType)
                    .HasColumnType("varchar(50)");
             builder.Property(a => a.CurrentBalance)

@@ -66,5 +66,52 @@ namespace Assignment._19.Services
             Console.WriteLine($"Customer created successfully. Customer Id = {customer.Id}");
             Console.WriteLine();
         }
+        public static void OpenAccount(AppDbContext context)
+        {
+            Console.WriteLine("--- Open New Account ---");
+            int choiceType = GetInt("Account Type:\n\t1)Savings\n\t2)Current\n\t3)Business\nChoice:", 1, 3);
+            AccountType type;
+            if (choiceType == 1)
+                type = AccountType.Savings;
+            else if (choiceType == 2)
+                type = AccountType.Current;
+            else
+                type = AccountType.Business;
+            string branchCode = GetString("Branch Code     : ");
+            int customerId = GetInt("Customer ID     : ",0,int.MaxValue);
+            int choiceRole = GetInt("OwnerShip Role:\n\t1)Primary\n\t2)CoHolder\nChoice:", 1, 2);
+            OwnerShipType role = (choiceRole == 1) ? OwnerShipType.Primary : OwnerShipType.CoHolder;
+            Console.WriteLine($"Validating branch '{branchCode}' and customer #{customerId} ...");
+            var branch = context.Branches.FirstOrDefault(b => b.Code == branchCode);
+            var customer = context.Customers.FirstOrDefault(c => c.Id == customerId);
+            if (branch == null )
+            {
+                Console.WriteLine("The branch is not found!");
+                return;
+            }
+            if (customer == null)
+            {
+                Console.WriteLine("The customer is not found!");
+                return;
+            }
+            var account = new Account
+            {
+                AccountType = type,
+                CurrentBalance = 0,
+                BranchId = branchCode
+            };
+            context.Accounts.Add(account);
+            context.SaveChanges();
+            var customerAccount = new CustomerAccount
+            {
+                CustomerId = customerId,
+                AccountId = account.AccountNumber,
+                OwnerShipType =role,
+                AccountStatus=AccountStatus.Active
+            };
+            context.CustomerAccounts.Add(customerAccount);
+            context.SaveChanges();
+            Console.WriteLine($"Account '{account.AccountNumber}' created and linked to customer {customerId} as {role} owner.");
+        }
     }
 }

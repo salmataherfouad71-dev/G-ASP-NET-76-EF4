@@ -34,12 +34,9 @@ namespace Assignment._19.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("BranchCode")
+                    b.Property<string>("BranchId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("BranchId")
-                        .HasColumnType("int");
 
                     b.Property<decimal>("CurrentBalance")
                         .HasColumnType("decimal(18,2)");
@@ -51,7 +48,7 @@ namespace Assignment._19.Migrations
 
                     b.HasKey("AccountNumber");
 
-                    b.HasIndex("BranchCode");
+                    b.HasIndex("BranchId");
 
                     b.ToTable("Accounts");
                 });
@@ -256,7 +253,7 @@ namespace Assignment._19.Migrations
                 {
                     b.HasOne("Assignment._19.Models.Branch", "Branch")
                         .WithMany("Accounts")
-                        .HasForeignKey("BranchCode")
+                        .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
