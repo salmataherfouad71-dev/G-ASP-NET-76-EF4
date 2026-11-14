@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using Assignment._19.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace Assignment._19.Services
 {
@@ -147,6 +149,29 @@ namespace Assignment._19.Services
             context.SaveChanges();
             Console.WriteLine($"OwnerShip link deleted.");
             Console.WriteLine($"\tThat was the last owner - account '{accountId}' was also removed.");
+        }
+        public static void ListAllCustomers(AppDbContext context)
+        {
+            Console.WriteLine("=== All Customers ===\n");
+            var customers =context.Customers.Include(c => c.Accounts).ThenInclude(c=>c.Account);
+            if (customers == null)
+            {
+                Console.WriteLine("There is no customers yet!");
+                return;
+            }
+            foreach (var customer in customers)
+            {
+                Console.WriteLine($"#{customer.Id} {customer.FullName} ({customer.CustomerType})");
+                if (customer.Accounts == null)
+                {
+                    Console.WriteLine("\t(no accounts)");
+                    return;
+                }
+                foreach (var account in customer.Accounts)
+                {
+                    Console.WriteLine($"\t{account.Account.AccountNumber}  Current Balance: {account.Account.CurrentBalance} {account.OwnerShipType} {account.AccountStatus}");
+                }
+            }
         }
     }
 }
